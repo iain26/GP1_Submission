@@ -15,13 +15,11 @@ cGame.h
 
 using namespace std;
 
-
-
 class cGame
 {
 public:
 	cGame();
-
+	//functions instantiated so they can be called 
 	void initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer);
 	void run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer);
 	void cleanUp(SDL_Window* theSDLWND);
@@ -31,11 +29,10 @@ public:
 	void update(double deltaTime);
 	bool getInput(bool theLoop);
 	double getElapsedSeconds();
-	bool gameReset(bool reset);
-	void won();
+	bool gameReset(bool reset);//reset game
 
-	int score = 0;
-	bool play = true;
+	int score = 0;//integer to maintain score
+	bool play = true;//boolean used in reseting the game
 
 	static cGame* getInstance();
 
@@ -87,9 +84,7 @@ private:
 	SDL_Point theAreaClicked;
 	bool fileAvailable;
 	
-
-
-	string scoreS = to_string(score);
+	string scoreS = to_string(score);//convert score into a string to display
 	bool finished = false;
 
 };

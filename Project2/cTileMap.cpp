@@ -5,10 +5,9 @@
 =================
 */
 #include "cTileMap.h"
-SDL_Point theMovement;
-int iMove[] = { 2, 3, 5, 3, 4, 2 };
-SDL_Rect carPosXY;
-cGame game;
+int iMove[] = { 2, 3, 5, 3, 4, 2 };//sets original position of cars
+//SDL_Rect carPosXY;
+cGame game;//variable to reference cGame
 /*
 =================================================================
  Defualt Constructor
@@ -16,26 +15,33 @@ cGame game;
 */
 cTileMap::cTileMap() : cSprite()
 {
-	//this->initialiseMap();
 }
 
 cTileMap::cTileMap(cFileHandler* aFile) : cSprite()
 {
-	/*this->initialiseMapFromFile(aFile);*/
 }
 
 
 void cTileMap::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, cTextureMgr* theTxtMgr, vector<LPCSTR> theTxt)
 {
-
-	int iGridSpace = 80;
+	int iGridSpace = 80;//sets all grid spaces to 80(half the amount of car width)
 	// determine number of rows and columns for array
 	int numRows = sizeof(tileMap) / sizeof(tileMap[0]);
 	int numCols = sizeof(tileMap[0]) / sizeof(tileMap[0][0]);
 	for (int row = 0; row < numRows; row++){
-		for (int column = 0; column < numCols; column++){
+		for (int column = 0; column < numCols; column++){//not sure if I need these last four lines but too afraid to change it
+			//sets the border texture then sets dimensions to the dimensions of red car
 			border.setTexture(theTxtMgr->getTexture(theTxt[7]));
 			border.setSpriteDimensions(theTxtMgr->getTexture(theTxt[0])->getTWidth(), theTxtMgr->getTexture(theTxt[0])->getTHeight());
+			//renders cars in exactly the same process 
+			//for each car sets texture
+			//sets the dimensions
+			//makes the SDL_Rect for position equal to dimensions of sprites
+			//also makes postion x and y equal to their position they should be at
+			//sets collider SDL_Rect for front and back changing x or y depending on orientation
+			//render sprite with position and dimensions
+			//if the car is selected then true
+			//and border is set on top of car sprite with same dimensions 
 			{
 				blue.setTexture(theTxtMgr->getTexture(theTxt[1]));
 				blue.setSpriteDimensions(theTxtMgr->getTexture(theTxt[1])->getTWidth(), theTxtMgr->getTexture(theTxt[1])->getTHeight());
@@ -121,10 +127,7 @@ void cTileMap::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, cTexture
 				}
 			}
 		}
-		//carPosXY.x += red.getSpritePos().w / 2;
 	}
-	//carPosXY.x = mapStartXY.x;
-	//carPosXY.y += red.getSpritePos().h;
 }
 	
 
@@ -132,23 +135,7 @@ void cTileMap::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer, cTexture
 
 void cTileMap::renderGridLines(SDL_Renderer* theRenderer, SDL_Rect theRect, SDL_Color theColour)
 {
-	//SDL_Rect tilePosXY;
-	//tilePosXY = { mapStartXY.x, mapStartXY.y, theRect.w, theRect.h };
-	//// determine number of rows and columns for array
-	//int numRows = sizeof(tileMap) / sizeof(tileMap[0]);
-	//int numCols = sizeof(tileMap[0]) / sizeof(tileMap[0][0]);
-	//SDL_SetRenderDrawColor(theRenderer, theColour.r, theColour.g, theColour.b, theColour.a);
-	//for (int row = 0; row < numRows; row++)
-	//{
-	//	for (int column = 0; column < numCols; column++)
-	//	{
-	//		SDL_RenderDrawRect(theRenderer, &tilePosXY);
-	//		tilePosXY.x += theRect.w;
-	//	}
-	//	tilePosXY.x = mapStartXY.x;
-	//	tilePosXY.y += theRect.h;
-	//}
-	//SDL_SetRenderDrawColor(theRenderer, 0, 0, 0, 255);
+
 }
 /*
 =================================================================
@@ -158,16 +145,7 @@ Update the sprite position
 
 void cTileMap::update(SDL_Point theMapAreaClicked, int theTileToPlace)
 {
-	//SDL_Point areaClicked = theMapAreaClicked;
-	/*if (theTileToPlace > -1)
-		{
-			if (areaClicked.x > this->mapStartXY.x && areaClicked.x < 612 && areaClicked.y > this->mapStartXY.y && areaClicked.y < 612)
-			{
-				this->tileClickedRC.x = (int)(areaClicked.x - this->mapStartXY.x) / this->red.getSpriteDimensions().w;
-				this->tileClickedRC.y = (int)(areaClicked.y - this->mapStartXY.y) / this->red.getSpriteDimensions().h;
-				this->tileMap[this->tileClickedRC.y][this->tileClickedRC.x] = theTileToPlace;
-			}
-		}*/
+	
 }
 /*
 =================================================================
@@ -176,14 +154,7 @@ void cTileMap::update(SDL_Point theMapAreaClicked, int theTileToPlace)
 */
 void cTileMap::initialiseMap()
 {
-	//srand(time(NULL));
-	//for (int row = 0; row < 6; row++)
-	//{
-	//	for (int column = 0; column < 6; column++)
-	//	{
-	//		this->tileMap[row][column] = -1;
-	//	}
-	//}
+	
 
 }
 /*
@@ -193,12 +164,7 @@ void cTileMap::initialiseMap()
 */
 void cTileMap::initialiseMapFromFile(cFileHandler* aFile)
 {
-	//string fileData;
-	//fileData = aFile->readDataFromFile();
 
-	//stringstream mapData(fileData);
-
-	//// Fill map with data from file
 
 }
 /*
@@ -206,13 +172,13 @@ void cTileMap::initialiseMapFromFile(cFileHandler* aFile)
 - set start position for tile map
 =================================================================
 */
-void cTileMap::setMapStartXY(SDL_Point startPosXY)
+void cTileMap::setMapStartXY(SDL_Point startPosXY)//takes in a x and y to set top left of grid 
 {
 	mapStartXY = startPosXY;
 }
 
 
-void cTileMap::reset(){
+void cTileMap::reset(){//resets the original positions and sets car selection back to red car
 	iMove[0] = 2;
 	iMove[1] = 3;
 	iMove[2] = 5;
@@ -224,13 +190,14 @@ void cTileMap::reset(){
 
 void cTileMap::addOneToMove()
 {
+	//booleans set that car can move forward or up depending on orientation of sprite
 	bool redMove = true;
 	bool yellowMove = true;
 	bool blueMove = true;
 	bool lightGreenMove = true;
 	bool purpleLorryMove = true;
 	bool yellowLorryMove = true;
-
+	//detects whether if each car can move forward or up depending on orientation
 	if (collidedWith(&redFrontCol, &bluePos) || collidedWith(&redFrontCol, &yellowPos) || collidedWith(&redFrontCol, &lightGreenPos) || collidedWith(&redFrontCol, &purpleLorryPos) || collidedWith(&redFrontCol, &yellowLorryPos)){
 		redMove = false;
 	}
@@ -249,15 +216,18 @@ void cTileMap::addOneToMove()
 	if (collidedWith(&purpleLorryFrontCol, &redPos) || collidedWith(&purpleLorryFrontCol, &yellowPos) || collidedWith(&purpleLorryFrontCol, &lightGreenPos) || collidedWith(&purpleLorryFrontCol, &bluePos) || collidedWith(&purpleLorryFrontCol, &yellowLorryPos)){
 		purpleLorryMove = false;
 	}
-	
+	//checks if every car is selected
+	//if selected then checks if it can move
+	//and is within confines of grid
+	//forward or up
+	//boolean for movement is set to true so that score can be updated
 		if (carSelect == 0){
 			if (redMove){
 				if (iMove[0] < 7){
 					iMove[0]++;
 					moved = true;
-					if (iMove[0] == 7){
-						finish = true;
-						//reset();
+					if (iMove[0] == 7){//if position of red car is at 7 (outside of grid)
+						finish = true;//then boolean finish set to true so that game can end
 					}
 				}
 			}
@@ -307,13 +277,14 @@ void cTileMap::addOneToMove()
 
 void cTileMap::subtractOneToMove()
 {
+	//booleans set that car can move backward or down depending on orientation of sprite
 	bool redMove = true;
 	bool yellowMove = true;
 	bool blueMove = true;
 	bool lightGreenMove = true;
 	bool purpleLorryMove = true;
 	bool yellowLorryMove = true;
-
+	//detects whether if each car can move forward or up depending on orientation
 	if (collidedWith(&redBackCol, &bluePos) || collidedWith(&redBackCol, &yellowPos) || collidedWith(&redBackCol, &lightGreenPos) || collidedWith(&redBackCol, &purpleLorryPos) || collidedWith(&redBackCol, &yellowLorryPos)){
 		redMove = false;
 	}
@@ -332,7 +303,11 @@ void cTileMap::subtractOneToMove()
 	if (collidedWith(&purpleLorryBackCol, &redPos) || collidedWith(&purpleLorryBackCol, &yellowPos) || collidedWith(&purpleLorryBackCol, &lightGreenPos) || collidedWith(&purpleLorryBackCol, &bluePos) || collidedWith(&purpleLorryBackCol, &yellowLorryPos)){
 		purpleLorryMove = false;
 	}
-
+	//checks if every car is selected
+	//if selected then checks if it can move
+	//and is within confines of grid
+	//backward or down
+	//boolean for movement is set to true so that score can be updated
 	if (carSelect == 0){
 		if (redMove){
 			if (iMove[0] > 1){
@@ -384,7 +359,7 @@ void cTileMap::subtractOneToMove()
 }
 
 
-bool cTileMap::endLevel(bool levelEnd){
+bool cTileMap::endLevel(bool levelEnd){//if finish boolean true (solved the game) then return true for function otherwise return false
 	if (finish){
 		finish = false;
 		return true;
@@ -394,7 +369,7 @@ bool cTileMap::endLevel(bool levelEnd){
 	}
 }
 
-bool cTileMap::updateScore(){
+bool cTileMap::updateScore(){//if moved boolean true (sprite moved) then return true for function otherwise return false
 	if (moved){
 		moved = false;
 		return true;
@@ -404,19 +379,19 @@ bool cTileMap::updateScore(){
 	}
 }
 
-void cTileMap::addToCarSelect()
+void cTileMap::addToCarSelect()//cycles through car selection
 {
-	carSelect++;
-	if (carSelect > 5){
-		carSelect = 0;
+	carSelect++;//add 1 to car selection
+	if (carSelect > 5){//if go beyond the amount of 6 car types
+		carSelect = 0;//then set back to first car selection
 	}
 }
 
-void cTileMap::subtractToCarSelect()
+void cTileMap::subtractToCarSelect()//subtracts 1 to car selection
 {
-	carSelect -= 1;
-	if (carSelect < 0){
-		carSelect = 5;
+	carSelect -= 1;//subtracts 1 to car selection
+	if (carSelect < 0){//if go under the amount of 6 car types
+		carSelect = 5;//then set back to last car selection
 	}
 }
 
@@ -434,21 +409,7 @@ SDL_Point cTileMap::getMapStartXY()
 =================================================================
 - get the tile map as a string
 =================================================================
-*/
-//string cTileMap::getMapData()
-//{
-//	string mapData = "";
-//	for (int row = 0; row < 8; row++)
-//	{
-//		for (int column = 0; column < 8; column++)
-//		{
-//			mapData += to_string(this->tileMap[row][column]) + ',';
-//		}
-//		//mapData += '\n';
-//	}
-//	
-//	return mapData;
-//}
+
 
 /*
 =================================================================
@@ -457,15 +418,5 @@ SDL_Point cTileMap::getMapStartXY()
 */
 void cTileMap::writeMapDataToFile(cFileHandler* aFile)
 {
-	//string mapDataToWrite = "";
-	//string theMapData = this->getMapData();
-	//stringstream outputStr(theMapData);
-	//if (!theMapData.empty())
-	//{
-	//	while (getline(outputStr, mapDataToWrite, '\n')){
-	//		mapDataToWrite += '\n';
-	//		aFile->writeDataToFile(mapDataToWrite);
-	//	}
-	//}
-	//aFile->closeFile();
+
 }

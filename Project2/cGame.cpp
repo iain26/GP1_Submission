@@ -10,7 +10,7 @@ static cTextureMgr* theTextureMgr = cTextureMgr::getInstance();
 static cFontMgr* theFontMgr = cFontMgr::getInstance();
 static cSoundMgr* theSoundMgr = cSoundMgr::getInstance();
 static cButtonMgr* theButtonMgr = cButtonMgr::getInstance();
-
+//sets reference for cTile Map to carMap
 cTileMap carMap;
 /*
 =================================================================================
@@ -38,7 +38,7 @@ cGame* cGame::getInstance()
 
 void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 {
-	scoreS = to_string(score);
+	scoreS = to_string(score);//sets string score to score integer
 
 	// Get width and height of render context
 	SDL_GetRendererOutputSize(theRenderer, &renderWidth, &renderHeight);
@@ -46,30 +46,16 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	// Clear the buffer with a black background
 	SDL_SetRenderDrawColor(theRenderer, 0, 0, 0, 255);
 	SDL_RenderPresent(theRenderer);
-
-	//scoreS = gameTextList[5] + to_string(score);
 	
 	theTextureMgr->setRenderer(theRenderer);
 	theFontMgr->initFontLib();
 	theSoundMgr->initMixer();
 
-	//// Set filename
-	//theFile.setFileName("Data/usermap.dat");
-	//// Check file is available
-	//if (!theFile.openFile(ios::in)) //open file for input output
-	//{
-	//	cout << "Could not open specified file '" << theFile.getFileName() << "'. Error " << SDL_GetError() << endl;
-	//	fileAvailable = false;
-	//}
-	//else
-	//{
-	//	cout << "File '" << theFile.getFileName() << "' opened for input!" << endl;
-	//	fileAvailable = true;
-	//}
-
 	theAreaClicked = { 0, 0 };
 	// Store the textures
+	//new texture names
 	textureName = { "Red Car", "Blue Car", "Light Green Car", "Blue Lorry", "Yellow Lorry", "Purple Lorry", "Yellow Car", "Border", "theGrid", "BackgroundMenu", "BackgroundEnd" };
+	//sets the image locations
 	texturesToUse = {"Images/Cars/Red Car.png", "Images/Cars/Blue Car.png", "Images/Cars/Light Green Car.png", "Images/Cars/Blue Lorry.png", "Images/Cars/Yellow Lorry.png", "Images/Cars/Purple Lorry.png", "Images/Cars/Yellow Car.png", "Images/Cars/Border.png", "Images/Bkg/Grid.png", "Images/Bkg/Background.png", "Images/Bkg/Background2.png" };
 	for (int tCount = 0; tCount < textureName.size(); tCount++)
 	{	
@@ -79,9 +65,10 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	aRect = { 0, 0, tempTextTexture->getTextureRect().w/2, tempTextTexture->getTextureRect().h };
 	aColour = { 228, 213, 238, 255 };
 	// Store the textures
-	btnNameList = { "exit_btn", "instructions_btn", "load_btn", "menu_btn", "play_btn", "save_btn", "settings_btn", "replay_btn" };
-	btnTexturesToUse = { "Images/Buttons/ExitButton.png", "Images/Buttons/button_instructions.png", "Images/Buttons/button_load.png", "Images/Buttons/MenuButton.png", "Images/Buttons/PlayButton.png", "Images/Buttons/button_save.png", "Images/Buttons/button_settings.png", "Images/Buttons/ReplayButton.png" };
-	btnPos = { { 400, 375 }, { 400, 300 }, { 400, 300 }, { 500, 500 }, { 400, 300 }, { 740, 500 }, { 400, 300 }, { 500, 500} };
+	//new replay button
+	btnNameList = { "exit_btn", "menu_btn", "play_btn", "replay_btn" };
+	btnTexturesToUse = { "Images/Buttons/ExitButton.png", "Images/Buttons/MenuButton.png", "Images/Buttons/PlayButton.png", "Images/Buttons/ReplayButton.png" };
+	btnPos = { { 400, 375 }, { 500, 500 }, { 400, 300 }, { 500, 500} };
 	for (int bCount = 0; bCount < btnNameList.size(); bCount++)
 	{
 		theTextureMgr->addTexture(btnNameList[bCount], btnTexturesToUse[bCount]);
@@ -94,7 +81,7 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		newBtn->setSpriteDimensions(theTextureMgr->getTexture(btnNameList[bCount])->getTWidth(), theTextureMgr->getTexture(btnNameList[bCount])->getTHeight());
 		theButtonMgr->add(btnNameList[bCount], newBtn);
 	}
-	theGameState = MENU;
+	theGameState = MENU;//sets the renderer to menu scene on startup
 	theBtnType = EXIT;
 	// Create textures for Game Dialogue (text)
 	fontList = { "Traffic"};
@@ -119,20 +106,20 @@ void cGame::initialise(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		theSoundMgr->add(soundList[sounds], soundsToUse[sounds], soundTypes[sounds]);
 	}
 
-	theSoundMgr->getSnd("theme")->play(-1);
+	theSoundMgr->getSnd("theme")->play(-1);//plays song infinetly
 
-	spriteBkgd.setSpritePos({ 0, 0 });
-	spriteBkgd.setTexture(theTextureMgr->getTexture("BackgroundMenu"));
-	spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("BackgroundMenu")->getTWidth(), theTextureMgr->getTexture("BackgroundMenu")->getTHeight());
+	spriteBkgd.setSpritePos({ 0, 0 });//sets background position to top left od SDL window
+	spriteBkgd.setTexture(theTextureMgr->getTexture("BackgroundMenu"));//sets background image
+	spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("BackgroundMenu")->getTWidth(), theTextureMgr->getTexture("BackgroundMenu")->getTHeight());//sets the dimensions of background sprite equal to dimension of background image
 
-	carMap.setMapStartXY({ 100, 100 });
+	carMap.setMapStartXY({ 100, 100 });//sets the x and y of top left of grid to 100X100
 }
 
-void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
+void cGame::run(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)//This is constantly runs 
 {
 	loop = true;
 
-	while (loop)
+	while (loop)//run while loop is true
 	{
 		//We get the time that passed since the last frame
 		double elapsedTime = this->getElapsedSeconds();
@@ -150,8 +137,8 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	{
 	case MENU:
 	{
-
 		{
+			//set background for this scene
 			spriteBkgd.setSpritePos({ 0, 0 });
 			spriteBkgd.setTexture(theTextureMgr->getTexture("BackgroundMenu"));
 			spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("BackgroundMenu")->getTWidth(), theTextureMgr->getTexture("BackgroundMenu")->getTHeight());
@@ -161,11 +148,12 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		tempTextTexture = theTextureMgr->getTexture("Title");
 		pos = { 10, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		scale = { 1, 1 };
+		//render game objective
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
 		tempTextTexture = theTextureMgr->getTexture("Objective");
 		pos = { 10, 75, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
-		// Render Button
+		// Render Buttons
 		theButtonMgr->getBtn("play_btn")->render(theRenderer, &theButtonMgr->getBtn("play_btn")->getSpriteDimensions(), &theButtonMgr->getBtn("play_btn")->getSpritePos(), theButtonMgr->getBtn("play_btn")->getSpriteScale());
 		theButtonMgr->getBtn("exit_btn")->setSpritePos({ 50, 325 });
 		theButtonMgr->getBtn("play_btn")->setSpritePos({ 50, 250 });
@@ -175,6 +163,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	case PLAYING:
 	{
 		{
+			//set background for this scene
 			spriteBkgd.setSpritePos({ 0, 0 });
 			spriteBkgd.setTexture(theTextureMgr->getTexture("theGrid"));
 			spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("theGrid")->getTWidth(), theTextureMgr->getTexture("theGrid")->getTHeight());
@@ -183,21 +172,19 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		tempTextTexture = theTextureMgr->getTexture("Title");
 		pos = { 10, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
-
+		//render "Score :" at top right
 		tempTextTexture = theTextureMgr->getTexture("Score");
 		pos = { 700, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
-
+		//add a text of score string and then render
 		theTextureMgr->addTexture("ScoreNum", theFontMgr->getFont("Traffic")->createTextTexture(theRenderer, scoreS.c_str(), SOLID, { 255, 0, 0, 255 }, { 0, 0, 0, 0 }));
 		tempTextTexture = theTextureMgr->getTexture("ScoreNum");
 		pos = { 900, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
 
-		// The Gridlines set to position
+		//set top left of grid
 		carMap.setMapStartXY({ 100, 100 });
 		carMap.render(theSDLWND, theRenderer, theTextureMgr, textureName);
-		//theTilePicker.render(theSDLWND, theRenderer, theTextureMgr, textureName);
-		//carMap.renderGridLines(theRenderer, aRect, aColour);
 		// Buttons Rendered
 		theButtonMgr->getBtn("exit_btn")->setSpritePos({ 740, 525 });
 		theButtonMgr->getBtn("exit_btn")->render(theRenderer, &theButtonMgr->getBtn("exit_btn")->getSpriteDimensions(), &theButtonMgr->getBtn("exit_btn")->getSpritePos(), theButtonMgr->getBtn("exit_btn")->getSpriteScale());
@@ -206,6 +193,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	case END:
 	{
 		{
+			//set background for this scene
 			spriteBkgd.setSpritePos({ 0, 0 });
 			spriteBkgd.setTexture(theTextureMgr->getTexture("BackgroundEnd"));
 			spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("BackgroundEnd")->getTWidth(), theTextureMgr->getTexture("BackgroundEnd")->getTHeight());
@@ -214,14 +202,11 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		tempTextTexture = theTextureMgr->getTexture("Title");
 		pos = { 10, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
+		//render retry text
 		tempTextTexture = theTextureMgr->getTexture("TryAgain");
 		pos = { 10, 100, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
-		/*theTextureMgr->addTexture("ScoreNum", theFontMgr->getFont("Traffic")->createTextTexture(theRenderer, scoreS.c_str(), SOLID, { 255, 0, 0, 255 }, { 0, 0, 0, 0 }));
-		tempTextTexture = theTextureMgr->getTexture("ScoreNum");
-		pos = { 600, 175, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
-		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
-*/
+		//render buttons
 		theButtonMgr->getBtn("menu_btn")->setSpritePos({ 500, 325 });
 		theButtonMgr->getBtn("menu_btn")->render(theRenderer, &theButtonMgr->getBtn("menu_btn")->getSpriteDimensions(), &theButtonMgr->getBtn("menu_btn")->getSpritePos(), theButtonMgr->getBtn("menu_btn")->getSpriteScale());
 		theButtonMgr->getBtn("replay_btn")->setSpritePos({ 500, 400 });
@@ -233,6 +218,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	case WON:
 	{
 		{
+			//set background for this scene
 			spriteBkgd.setSpritePos({ 0, 0 });
 			spriteBkgd.setTexture(theTextureMgr->getTexture("BackgroundEnd"));
 			spriteBkgd.setSpriteDimensions(theTextureMgr->getTexture("BackgroundEnd")->getTWidth(), theTextureMgr->getTexture("BackgroundEnd")->getTHeight());
@@ -241,12 +227,14 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 		tempTextTexture = theTextureMgr->getTexture("Title");
 		pos = { 10, 10, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
+		//render the congratulation message
 		tempTextTexture = theTextureMgr->getTexture("Congrats");
 		pos = { 10, 100, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
 		tempTextTexture = theTextureMgr->getTexture("Congrats2");
 		pos = { 10, 175, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
 		tempTextTexture->renderTexture(theRenderer, tempTextTexture->getTexture(), &tempTextTexture->getTextureRect(), &pos, scale);
+		//render score amount
 		theTextureMgr->addTexture("ScoreNum", theFontMgr->getFont("Traffic")->createTextTexture(theRenderer, scoreS.c_str(), SOLID, { 255, 0, 0, 255 }, { 0, 0, 0, 0 }));
 		tempTextTexture = theTextureMgr->getTexture("ScoreNum");
 		pos = { 600, 175, tempTextTexture->getTextureRect().w, tempTextTexture->getTextureRect().h };
@@ -262,6 +250,7 @@ void cGame::render(SDL_Window* theSDLWND, SDL_Renderer* theRenderer)
 	break;
 	case QUIT:
 	{
+		//stop the game
 		loop = false;
 	}
 	break;
@@ -289,47 +278,25 @@ void cGame::update(double deltaTime)
 	{
 		case MENU:
 		{
+			//change scene if button clicked
 			theGameState = theButtonMgr->getBtn("exit_btn")->update(theGameState, QUIT, theAreaClicked);
 			theGameState = theButtonMgr->getBtn("play_btn")->update(theGameState, PLAYING, theAreaClicked);
 		}
 		break;
 		case PLAYING:
 		{
-			if (play){
+			if (play){//if play is true then reset game and make play false 
 				gameReset(true);
 				play = false;
 			}
+			//change scene if button clicked
 			theGameState = theButtonMgr->getBtn("exit_btn")->update(theGameState, END, theAreaClicked);
-			//theGameState = theButtonMgr->getBtn("load_btn")->update(theGameState, LOADMAP, theAreaClicked);
-			/*if (fileAvailable && theGameState == LOADMAP)
-			{
-				carMap.initialiseMapFromFile(&theFile);
-				theGameState = PLAYING;
-				theAreaClicked = { 0, 0 };*/
-		    //}
-			//theGameState = theButtonMgr->getBtn("save_btn")->update(theGameState, SAVEMAP, theAreaClicked);
-		//	if (theGameState == SAVEMAP)
-		//	{
-		//		// Check file is available
-		//		if (!theFile.openFile(ios::out)) //open file for output
-		//		{
-		//			cout << "Could not open specified file '" << theFile.getFileName() << "'. Error " << SDL_GetError() << endl;
-		//		}
-		//		else
-		//		{
-		//			cout << "File '" << theFile.getFileName() << "' opened for output!" << endl;
-		//			carMap.writeMapDataToFile(&theFile);
-		//		}
-
-		//		//carMap.writeMapDataToFile(&theFile);
-		//		theGameState = PLAYING;
-		//		theAreaClicked = { 0, 0 };
-		//	}
 		}
 		break;
 		case END:
 		{
-			play = true;
+			play = true;//play is true
+			//change scene if button clicked
 			theGameState = theButtonMgr->getBtn("exit_btn")->update(theGameState, QUIT, theAreaClicked);
 			theGameState = theButtonMgr->getBtn("menu_btn")->update(theGameState, MENU, theAreaClicked);
 			theGameState = theButtonMgr->getBtn("replay_btn")->update(theGameState, PLAYING, theAreaClicked);
@@ -337,7 +304,8 @@ void cGame::update(double deltaTime)
 		break;
 		case WON:
 		{
-			play = true;
+			play = true;//play is true
+			//change scene if button clicked
 			theGameState = theButtonMgr->getBtn("exit_btn")->update(theGameState, QUIT, theAreaClicked);
 			theGameState = theButtonMgr->getBtn("menu_btn")->update(theGameState, MENU, theAreaClicked);
 			theGameState = theButtonMgr->getBtn("replay_btn")->update(theGameState, PLAYING, theAreaClicked);
@@ -353,11 +321,12 @@ void cGame::update(double deltaTime)
 }
 
 bool cGame::gameReset(bool reset){
+	//if reset true then 
 	if (reset){
-		carMap.reset();
-		score = 0;
-		scoreS = to_string(score);
-		theTextureMgr->deleteTexture("ScoreNum");
+		carMap.reset();//call for positions to be reset 
+		score = 0;//score to 0
+		scoreS = to_string(score);//convert integer score to a string
+		theTextureMgr->deleteTexture("ScoreNum");//delete old text for displaying score 
 	}
 	return true;
 }
@@ -371,7 +340,7 @@ bool cGame::getInput(bool theLoop)
 	{
 		if (event.type == SDL_QUIT)
 		{
-			theLoop = false;
+			theLoop = false;//the window to close
 		}
 
 		switch (event.type)
@@ -381,7 +350,7 @@ bool cGame::getInput(bool theLoop)
 				{
 				case SDL_BUTTON_LEFT:
 				{
-					theAreaClicked = { event.motion.x, event.motion.y };
+					theAreaClicked = { event.motion.x, event.motion.y };//position of area when clicked
 				}
 				break;
 				case SDL_BUTTON_RIGHT:
@@ -406,25 +375,23 @@ bool cGame::getInput(bool theLoop)
 				break;
 			case SDL_MOUSEMOTION:
 			{
-				//dragTile.setSpritePos({ event.motion.x, event.motion.y });
 			}
 			break;
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)
 				{
 				case SDLK_ESCAPE:
-					theLoop = false;
+					theLoop = false;//closes the window
 					break;
 				case SDLK_DOWN:
 				{
-					if (theGameState == PLAYING){
-						carMap.subtractOneToMove();
-						//dfinished = true;
-						if (carMap.updateScore()){
-							theSoundMgr->getSnd("screech")->play(0);
-							score++;
-							scoreS = to_string(score);
-							theTextureMgr->deleteTexture("ScoreNum");
+					if (theGameState == PLAYING){//if in play scene
+						carMap.subtractOneToMove();//move selected car left or down if possible
+						if (carMap.updateScore()){//check if moved
+							theSoundMgr->getSnd("screech")->play(0);//play sound once
+							score++;//add 1 to score
+							scoreS = to_string(score);//convert integer score to a string
+							theTextureMgr->deleteTexture("ScoreNum");//delete old text for displaying score 
 						}
 					}
 				}
@@ -432,34 +399,32 @@ bool cGame::getInput(bool theLoop)
 
 				case SDLK_UP:
 				{
-					if (theGameState == PLAYING){
-						carMap.addOneToMove();
-						cout << "ran moved" << endl;
-						if (carMap.endLevel(true)){
-							theGameState = WON;
-							theAreaClicked = { 0, 0 };
-							cout << "ran won" << endl;
+					if (theGameState == PLAYING){//if in play scene
+						carMap.addOneToMove();//move selected car right or up if possible
+						if (carMap.endLevel(true)){//check if reached end
+							theGameState = WON;//go to won scene
+							theAreaClicked = { 0, 0 };//make top left 
 						}
-						if (carMap.updateScore()){
-							theSoundMgr->getSnd("screech")->play(0);
-							score++;
-							scoreS = to_string(score);
-							theTextureMgr->deleteTexture("ScoreNum");
+						if (carMap.updateScore()){//check if moved
+							theSoundMgr->getSnd("screech")->play(0);//play sound once
+							score++;//add 1 to score
+							scoreS = to_string(score);//convert integer score to a string
+							theTextureMgr->deleteTexture("ScoreNum");//delete old text for displaying score 
 						}
 					}
 				}
 				break;
 				case SDLK_RIGHT:
 				{
-					if (theGameState == PLAYING){
-						carMap.addToCarSelect();
+					if (theGameState == PLAYING){//if in play scene
+						carMap.addToCarSelect();//move car selection
 					}
 				}
 				break;
 				case SDLK_LEFT:
 				{
-					if (theGameState == PLAYING){
-						carMap.subtractToCarSelect();
+					if (theGameState == PLAYING){//if in play scene
+						carMap.subtractToCarSelect();//move car selection
 					}
 				}
 				break;
@@ -479,9 +444,6 @@ bool cGame::getInput(bool theLoop)
 	return theLoop;
 }
 
-void cGame::won(){
-	theGameState = WON;
-}
 
 double cGame::getElapsedSeconds()
 {
